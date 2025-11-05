@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: gateway-api
+    runtime: node
+    plan: free
+    region: ohio
+    buildCommand: npm install
+    startCommand: npm start
+    rootDir: ./gateway-api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Variables que necesitas configurar manualmente en Render:
+      # USERS_API_URL - URL del servicio de usuarios
+      # APPOINTMENTS_API_URL - URL del servicio de citas  
+      # SERVICES_API_URL - URL del servicio de servicios
+      # Otras variables de entorno específicas de tu aplicación
