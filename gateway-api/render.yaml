@@ -12,8 +12,18 @@ services:
         value: production
       - key: PORT
         value: 10000
-      # Variables que necesitas configurar manualmente en Render:
-      # USERS_API_URL - URL del servicio de usuarios
-      # APPOINTMENTS_API_URL - URL del servicio de citas  
-      # SERVICES_API_URL - URL del servicio de servicios
-      # Otras variables de entorno específicas de tu aplicación
+      - key: USERS_API_URL
+        value: https://users-api-jmp5.onrender.com
+      - key: APPOINTMENTS_API_URL
+        value: https://carwash-appointments.onrender.com
+      - key: SERVICES_API_URL
+        value: https://carwash-services.onrender.com
+      - key: FRONTEND_URL
+        value: https://carwashfrontend.netlify.app
+      - key: JWT_SECRET
+        value: B8NjD4mOY1LQ4V
+      - key: JWT_REFRESH_SECRET
+        value: QQxB0EcFo0Aq4d
+      - key: ADMIN_REGISTER_SECRET
+        value: sistemaintegraldelaseguridad
+    healthCheckPath: /

@@ -2,32 +2,88 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const router = require('./routes');
-const errorHandler = require('./middlewares/error.middleware');
-
 const app = express();
 
-// Body parsers globales
-app.use(express.json({ limit: '10mb' })); 
-app.use(express.urlencoded({ extended: true }));
 
+// Configuración de CORS para arquitectura de Gateway centralizado
+const allowedOrigins = [
+  'https://carwashfrontend.netlify.app',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
+
+// Uso de credenciales solo para orígenes confiables
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) {
+      return callback(null, true);
+    }
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS policy'));
+    }
+  },
+
+  // Habilitar credentials solo para orígenes confiables
+  credentials: function(req, callback) {
+    const trustedForCredentials = [
+      'https://carwashfrontend.netlify.app'
+    ];
+    const origin = req.headers.origin;
+    if (!origin) {
+      return callback(null, false);
+    }
+    const allowCredentials = trustedForCredentials.includes(origin);
+    callback(null, allowCredentials);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-API-Key'],
+  exposedHeaders: ['X-Total-Count'],
+  maxAge: 86400 // 24 hours
+}));
+
+// Security middleware
 app.use(helmet());
-app.use(cors());
 
+// Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 15 * 60 * 1000, // 15 minutes
   max: 200,
   message: 'Too many requests from this IP, please try again later.'
 });
+
 app.use(limiter);
 
-// Enrutado de peticiones
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+
+// Health check endpoint for Render
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Gateway API is running successfully!',
+    timestamp: new Date().toISOString(),
+    status: 'healthy'
+  });
+});
+
+// All routes
+const router = require('./routes');
 app.use('/api', router);
 
-// Manejo de errores
-app.use(errorHandler);
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+// 404 handler error 
+app.use('*', (req, res, next) => {
+  const error = new Error('Route not found');
+  error.status = 404;
+  next(error);
 });
+
+// Error middleware 
+const errorHandler = require('./middlewares/error.middleware');
+app.use(errorHandler);
 
 module.exports = app;
