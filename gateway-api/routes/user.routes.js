@@ -15,13 +15,16 @@ router.post('/admin/register', proxyController.createAdmin);
 router.post('/forgot-password', proxyController.forgotPassword);
 router.post('/reset-password', proxyController.resetPassword);
 
-// Obtener datos del perfil del usuario autenticado
-router.get('/me', authenticateJWT, proxyController.getMe);
+// Obtener datos del perfil del usuario autenticado (/me)
+router.get('/me', authenticateJWT, proxyController.getMeProfile);
 
 // Gestión de usuarios (solo admin)
 router.get('/', authenticateJWT, authorizeRole(['admin']), proxyController.getAllUsers);
 router.post('/', authenticateJWT, authorizeRole(['admin']), proxyController.createUser);
 router.put('/:id', authenticateJWT, authorizeRole(['admin']), proxyController.updateUser);
 router.delete('/:id', authenticateJWT, authorizeRole(['admin']), proxyController.deleteUser);
+
+// Obtener datos del usuario por id (el microservicio maneja la autorización)
+router.get('/:id', authenticateJWT, proxyController.getMe);
 
 module.exports = router;

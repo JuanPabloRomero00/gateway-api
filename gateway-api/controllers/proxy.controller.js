@@ -114,8 +114,24 @@ exports.deleteUser = async (req, res, next) => {
 
 exports.getMe = async (req, res, next) => {
   try {
-    // El endpoint /me no existe en el microservicio users-api
-    // En su lugar, usamos la obtención por ID del usuario autenticado
+    // Para /users/:id, usar el parámetro de la ruta o el ID del usuario autenticado
+    const userId = req.params.id || req.user.id;
+    const data = await proxyRequest({
+      url: process.env.USERS_API_URL + `/api/users/${userId}`,
+      method: 'GET',
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
+    });
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Función específica para /me que redirije al ID del usuario
+exports.getMeProfile = async (req, res, next) => {
+  try {
     const data = await proxyRequest({
       url: process.env.USERS_API_URL + `/api/users/${req.user.id}`,
       method: 'GET',
