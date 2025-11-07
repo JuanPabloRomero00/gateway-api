@@ -1,5 +1,7 @@
 const formatError = require('../utils/formatError');
 
+// Import fetch for Node.js compatibility
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // Realiza solicitud proxy a otro microservicio
 async function proxyRequest({ url, method = 'GET', body, headers = {} }) {
