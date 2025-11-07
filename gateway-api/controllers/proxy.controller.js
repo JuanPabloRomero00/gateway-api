@@ -41,6 +41,7 @@ exports.loginUser = async (req, res, next) => {
 };
 
 exports.forgotPassword = async (req, res, next) => {
+  console.log('🔔 [GATEWAY] POST /api/users/forgot-password recibido', req.body);
   try {
     const data = await proxyRequest({
       url: process.env.USERS_API_URL + '/api/users/forgot-password',
