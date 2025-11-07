@@ -20,10 +20,4 @@ services:
         value: https://carwash-services.onrender.com
       - key: FRONTEND_URL
         value: https://carwashfrontend.netlify.app
-      - key: JWT_SECRET
-        value: B8NjD4mOY1LQ4V
-      - key: JWT_REFRESH_SECRET
-        value: QQxB0EcFo0Aq4d
-      - key: ADMIN_REGISTER_SECRET
-        value: sistemaintegraldelaseguridad
     healthCheckPath: /
