@@ -71,7 +71,9 @@ exports.getAllUsers = async (req, res, next) => {
     const data = await proxyRequest({
       url: process.env.USERS_API_URL + '/api/users',
       method: 'GET',
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.json(data);
   } catch (err) {
@@ -85,7 +87,9 @@ exports.updateUser = async (req, res, next) => {
       url: process.env.USERS_API_URL + `/api/users/${req.params.id}`,
       method: 'PUT',
       body: req.body,
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.json(data);
   } catch (err) {
@@ -98,7 +102,9 @@ exports.deleteUser = async (req, res, next) => {
     await proxyRequest({
       url: process.env.USERS_API_URL + `/api/users/${req.params.id}`,
       method: 'DELETE',
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.status(204).send();
   } catch (err) {
@@ -108,10 +114,14 @@ exports.deleteUser = async (req, res, next) => {
 
 exports.getMe = async (req, res, next) => {
   try {
+    // El endpoint /me no existe en el microservicio users-api
+    // En su lugar, usamos la obtención por ID del usuario autenticado
     const data = await proxyRequest({
       url: process.env.USERS_API_URL + `/api/users/${req.user.id}`,
       method: 'GET',
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.json(data);
   } catch (err) {
@@ -126,7 +136,9 @@ exports.createAppointment = async (req, res, next) => {
       url: process.env.APPOINTMENTS_API_URL + '/api/appointments',
       method: 'POST',
       body: req.body,
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.json(data);
   } catch (err) {
@@ -139,7 +151,9 @@ exports.getAppointments = async (req, res, next) => {
     const data = await proxyRequest({
       url: process.env.APPOINTMENTS_API_URL + '/api/appointments',
       method: 'GET',
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.json(data);
   } catch (err) {
@@ -153,7 +167,9 @@ exports.updateAppointment = async (req, res, next) => {
       url: process.env.APPOINTMENTS_API_URL + `/api/appointments/${req.params.id}`,
       method: 'PUT',
       body: req.body,
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.json(data);
   } catch (err) {
@@ -166,7 +182,9 @@ exports.deleteAppointment = async (req, res, next) => {
     await proxyRequest({
       url: process.env.APPOINTMENTS_API_URL + `/api/appointments/${req.params.id}`,
       method: 'DELETE',
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.status(204).send();
   } catch (err) {
@@ -193,7 +211,9 @@ exports.createService = async (req, res, next) => {
       url: process.env.SERVICES_API_URL + '/api/services',
       method: 'POST',
       body: req.body,
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.json(data);
   } catch (err) {
@@ -207,7 +227,9 @@ exports.updateService = async (req, res, next) => {
       url: process.env.SERVICES_API_URL + `/api/services/${req.params.id}`,
       method: 'PUT',
       body: req.body,
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.json(data);
   } catch (err) {
@@ -220,9 +242,57 @@ exports.deleteService = async (req, res, next) => {
     await proxyRequest({
       url: process.env.SERVICES_API_URL + `/api/services/${req.params.id}`,
       method: 'DELETE',
-      headers: { 'x-user': JSON.stringify(req.user) }
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
     });
     res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+};
+
+// APPOINTMENTS - Rutas adicionales que faltaban
+exports.getAllAppointments = async (req, res, next) => {
+  try {
+    const data = await proxyRequest({
+      url: process.env.APPOINTMENTS_API_URL + '/api/appointments/all',
+      method: 'GET',
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
+    });
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getUserAppointmentsAdmin = async (req, res, next) => {
+  try {
+    const data = await proxyRequest({
+      url: process.env.APPOINTMENTS_API_URL + `/api/appointments/user/${req.params.userId}`,
+      method: 'GET',
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
+    });
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.cancelAppointment = async (req, res, next) => {
+  try {
+    await proxyRequest({
+      url: process.env.APPOINTMENTS_API_URL + `/api/appointments/cancel/${req.params.id}`,
+      method: 'DELETE',
+      headers: { 
+        'Authorization': req.headers.authorization
+      }
+    });
+    res.status(200).json({ message: 'Cita cancelada correctamente' });
   } catch (err) {
     next(err);
   }

@@ -4,14 +4,23 @@ const formatError = require('../utils/formatError');
 // Realiza solicitud proxy a otro microservicio
 async function proxyRequest({ url, method = 'GET', body, headers = {} }) {
   try {
+    console.log(`🔄 Proxy request: ${method} ${url}`);
+    console.log('📋 Headers:', headers);
+    if (body) console.log('📦 Body:', body);
+    
     const options = {
       method,
       headers: { 'Content-Type': 'application/json', ...headers },
       ...(body ? { body: JSON.stringify(body) } : {})
     };
+    
     const response = await fetch(url, options);
+    console.log(`📡 Response status: ${response.status} ${response.statusText}`);
+    
     const data = await response.json().catch(() => ({}));
+    
     if (!response.ok) {
+      console.log('❌ Error response:', data);
       // si viene mensaje del microservicio, lo usa, si no, usa un mensaje genérico
       const representMsg = data.message || data.error;
       const error = new Error(representMsg && representMsg !== 'Error en el microservicio' ? representMsg : 'Error en el microservicio');
@@ -23,8 +32,11 @@ async function proxyRequest({ url, method = 'GET', body, headers = {} }) {
       }
       throw error;
     }
+    
+    console.log('✅ Success response:', data);
     return data;
   } catch (err) {
+    console.log('💥 Proxy error:', err.message);
     if (err.status) {
       throw err;
     }
