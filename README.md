@@ -1,7 +1,7 @@
-# CarwashFreaks 🚗✨
+# CarwashFreaks
 Una web para gestionar un servicio de lavado de autos: turnos, servicios, reservas y más.
 
-## ✅ Características
+## Características
 
 - Registro y autenticación de usuarios  
 - Listado de servicios con imágenes, descripción y precios  
@@ -10,7 +10,7 @@ Una web para gestionar un servicio de lavado de autos: turnos, servicios, reserv
 - Responsive (adaptado para móviles y escritorio)  
 - Buen diseño visual con estilo moderno
 
-## 🛠 Tecnologías usadas
+##Tecnologías usadas
 
 Aquí un listado de las principales herramientas y librerías:
 
@@ -21,7 +21,7 @@ Aquí un listado de las principales herramientas y librerías:
 
 ---
 
-## 🔒 Registro privado de administrador
+## Registro privado de administrador
 
 Para registrar un usuario con rol "admin" accedé a la siguiente URL (solo si conocés el secret):
 
