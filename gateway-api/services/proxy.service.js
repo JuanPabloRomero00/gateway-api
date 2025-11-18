@@ -1,7 +1,7 @@
 const axios = require('axios');
 const formatError = require('../utils/formatError');
 
-// Realiza solicitud proxy a otro microservicio
+// Make a proxy request to another microservice
 async function proxyRequest({ url, method = 'GET', body, headers = {} }) {
   try {
     console.log(`🔄 Proxy request: ${method} ${url}`);
@@ -13,8 +13,8 @@ async function proxyRequest({ url, method = 'GET', body, headers = {} }) {
       url,
       headers: { 'Content-Type': 'application/json', ...headers },
       ...(body ? { data: body } : {}),
-      timeout: 30000, // 30 segundos timeout
-      validateStatus: () => true // No lanzar error en status codes
+      timeout: 30000, // 30 seconds timeout
+      validateStatus: () => true
     };
     
     const response = await axios(config);
@@ -24,12 +24,12 @@ async function proxyRequest({ url, method = 'GET', body, headers = {} }) {
     
     if (response.status >= 400) {
       console.log('❌ Error response:', data);
-      // si viene mensaje del microservicio, lo usa, si no, usa un mensaje genérico
+      // if there is a message from the microservice, use it, otherwise use a generic message
       const representMsg = data.message || data.error;
       const error = new Error(representMsg && representMsg !== 'Error en el microservicio' ? representMsg : 'Error en el microservicio');
       error.status = response.status;
       error.details = data;
-      // Si el mensaje es válido y no es genérico, lo asigna a los detalles del error
+      // If the message is valid and not generic, assign it to the error details
       if (representMsg && representMsg !== 'Error en el microservicio') {
         error.details.message = representMsg;
       }

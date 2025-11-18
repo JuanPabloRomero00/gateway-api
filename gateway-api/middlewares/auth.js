@@ -1,6 +1,6 @@
 const jwtService = require('../services/jwt.service');
 
-// Middleware de autenticación y autorización que verifica JWT y roles
+// Authentication and authorization middleware that verifies JWT and roles
 function authenticateJWT(req, res, next) {
   const authHeader = req.headers['authorization'];
   if (!authHeader) return res.status(401).json({ error: 'No token provided' });
@@ -13,7 +13,7 @@ function authenticateJWT(req, res, next) {
     return res.status(403).json({ error: 'Invalid token' });
   }
 }
-// Middleware de autorización basado en roles
+// Role-based authorization middleware
 function authorizeRole(roles = []) {
   return (req, res, next) => {
     if (!roles.length) return next();

@@ -1,4 +1,4 @@
-// Controlador de permisos (RBAC)
+// Permissions controller (RBAC)
 const permissionsService = require('../services/permissions.service');
 
 exports.getPermissions = async (req, res, next) => {

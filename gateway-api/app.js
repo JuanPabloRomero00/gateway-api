@@ -5,14 +5,14 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 
 
-// Configuración de CORS para arquitectura de Gateway centralizado
+// CORS configuration for centralized gateway architecture
 const allowedOrigins = [
   'https://carwashfrontend.netlify.app',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
 
-// Uso de credenciales solo para orígenes confiables
+// Use credentials only for trusted origins
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) {
@@ -26,7 +26,7 @@ app.use(cors({
     }
   },
 
-  // Habilitar credentials solo para orígenes confiables
+  // Enable credentials only for trusted origins
   credentials: function(req, callback) {
     const trustedForCredentials = [
       'https://carwashfrontend.netlify.app'

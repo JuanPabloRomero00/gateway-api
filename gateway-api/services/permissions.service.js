@@ -1,4 +1,4 @@
-// Servicio de administración de permisos
+// Permits management service
 const permissions = [
   { id: '1', name: 'admin' },
   { id: '2', name: 'user' },

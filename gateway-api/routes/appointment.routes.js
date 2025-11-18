@@ -3,22 +3,22 @@ const router = express.Router();
 const proxyController = require('../controllers/proxy.controller');
 const { authenticateJWT, authorizeRole } = require('../middlewares/auth');
 
-// Crear un nuevo turno (requiere autenticación)
+// Create a new appointment (requires authentication)
 router.post('/', authenticateJWT, proxyController.createAppointment);
 
-// Obtener mis turnos (autenticado)
+// Get my appointments (authenticated)
 router.get('/', authenticateJWT, proxyController.getAppointments);
 
-// Obtener todos los turnos (solo admin)
+// Get all appointments (admin only)
 router.get('/all', authenticateJWT, authorizeRole(['admin']), proxyController.getAllAppointments);
 
-// Obtener turnos de un usuario específico (solo admin)
+// Get appointments of a specific user (admin only)
 router.get('/user/:userId', authenticateJWT, authorizeRole(['admin']), proxyController.getUserAppointmentsAdmin);
 
-// Cancelar turno propio
+// Cancel my appointment
 router.delete('/cancel/:id', authenticateJWT, proxyController.cancelAppointment);
 
-// Actualizar y eliminar turno (solo admin)
+// Update and delete appointment (admin only)
 router.put('/:id', authenticateJWT, authorizeRole(['admin']), proxyController.updateAppointment);
 router.delete('/:id', authenticateJWT, authorizeRole(['admin']), proxyController.deleteAppointment);
 

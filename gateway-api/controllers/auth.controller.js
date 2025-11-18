@@ -4,7 +4,7 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Envio de credenciales a users-api
+    // Credentials verification via users-api
     const loginRes = await fetch(process.env.USERS_API_URL + '/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -16,12 +16,11 @@ const login = async (req, res, next) => {
     }
     const { user } = await loginRes.json();
 
-
-    // Generación de tokens JWT
+    // JWT token generation
     const accessToken = jwtService.generateToken(user, '15m');
     const refreshToken = jwtService.generateToken(user, '30d');
 
-    // Guardo refresh token del usuario en users-api
+    // Save user's refresh token in users-api
     const refreshRes = await fetch(process.env.USERS_API_URL + '/api/auth/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

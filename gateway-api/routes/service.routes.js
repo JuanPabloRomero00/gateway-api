@@ -3,10 +3,10 @@ const router = express.Router();
 const proxyController = require('../controllers/proxy.controller');
 const { authenticateJWT, authorizeRole } = require('../middlewares/auth');
 
-// Consultar servicios (público)
+// Get services (public)
 router.get('/', proxyController.getServices);
 
-// Crear, editar y eliminar servicios (solo admin)
+// Create, update, and delete services (admin only)
 router.post('/', authenticateJWT, authorizeRole(['admin']), proxyController.createService);
 router.put('/:id', authenticateJWT, authorizeRole(['admin']), proxyController.updateService);
 router.delete('/:id', authenticateJWT, authorizeRole(['admin']), proxyController.deleteService);

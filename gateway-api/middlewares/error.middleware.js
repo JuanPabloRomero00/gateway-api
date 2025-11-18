@@ -1,14 +1,14 @@
 module.exports = (err, req, res, next) => {
   const status = err.status || 500;
-  // Mensaje de error predeterminado
+  // Default error message
   let message = err.message || 'Ocurrió un error inesperado.';
 
-  // Mensaje personalizado del microservicio
+  // Custom message from the microservice
   if (err.details && typeof err.details.message === 'string' && err.details.message.trim()) {
     message = err.details.message;
   }
 
-  // Mensajes basados en el código de estado si no hay mensaje válido
+  // Messages based on the status code if there is no valid message
   if (!message || message === 'Error en el microservicio') {
     if (status === 400) message = 'Solicitud inválida.';
     if (status === 401) message = 'No autorizado.';

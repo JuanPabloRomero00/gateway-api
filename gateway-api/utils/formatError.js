@@ -1,4 +1,4 @@
-// Utilidad para formatear errores recibidos de las APIs
+// Utility for formatting errors received from APIs
 module.exports = (error) => {
   if (error.response && error.response.data) {
     return {
